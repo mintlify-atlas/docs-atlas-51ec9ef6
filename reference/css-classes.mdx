@@ -1,5 +1,5 @@
 ---
-title: "Window CSS classes and ID selectors reference"
+title: "Window component CSS classes and ID selectors reference"
 sidebarTitle: "CSS Classes"
 description: "Reference for every CSS selector in Window's stylesheet, including IDs, class names, property values, and dark mode overrides via prefers-color-scheme."
 ---
@@ -36,6 +36,16 @@ The root window panel. `position: absolute` is required for drag repositioning v
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+```
+
+## `img`
+
+Constrains any `<img>` elements on the page to a fixed height. This rule is global — it applies to all images inside the component or anywhere on the host page.
+
+```css
+img {
+    height: 50px;
 }
 ```
 
