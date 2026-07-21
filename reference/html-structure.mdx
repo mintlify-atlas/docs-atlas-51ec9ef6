@@ -1,0 +1,98 @@
+---
+title: "Window HTML structure and element reference"
+sidebarTitle: "HTML Structure"
+description: "Complete reference for every HTML element in the Window component, including IDs, class names, nesting order, and their roles in drag and close behavior."
+---
+
+This page is the canonical reference for Window's HTML markup. It documents every element inside `#window-container`, its ID or class name, how elements are nested, and the role each one plays in the component's drag and close behavior.
+
+## Full markup
+
+The complete `#window-container` tree as it appears in `index.html`:
+
+```html
+<div id="window-container">
+    <div id="title-bar">
+        <div id="window-buttons">
+            <span class="btn close" id="close"></span>
+            <span class="btn mini"></span>
+            <span class="btn maxi"></span>
+        </div>
+    </div>
+    <div id="window-content">
+        <button>Click me</button>
+    </div>
+</div>
+```
+
+## Element reference
+
+### `#window-container`
+
+**Tag:** `div`
+
+The root element of the Window component. Positioned with `position: absolute` so that drag logic can reposition it by updating its `left` and `top` inline styles. On initial load it is centered on screen via `top: 50%; left: 50%; transform: translate(-50%, -50%)`. It has a fixed `width` of `400px`, a `14px` border-radius, and a subtle drop shadow to simulate a floating panel.
+
+---
+
+### `#title-bar`
+
+**Tag:** `div`
+
+The draggable handle region at the top of the window. Receives the `mousedown` event that initiates a drag sequence. `user-select: none` prevents text selection while dragging, and `cursor: default` keeps the pointer from changing to a text cursor. A bottom border visually separates it from the content area.
+
+---
+
+### `#window-buttons`
+
+**Tag:** `div`
+
+A flex container that holds the three traffic-light control buttons. Uses `display: flex` with a `gap` of `8px` to space the buttons evenly in a row on the left side of the title bar.
+
+---
+
+### `.btn.close` / `#close`
+
+**Tag:** `span`
+
+The red close button. Carries both the shared `.btn` class (which sets `width: 15px`, `height: 15px`, and `border-radius: 50%`) and the `.close` modifier class (which sets `background-color: #ff3939`). The `id="close"` attribute is used by `script.js` to attach the click handler that hides the window.
+
+---
+
+### `.btn.mini`
+
+**Tag:** `span`
+
+The yellow minimize button. Shares the `.btn` base styles and uses `.mini` for its `background-color: #e8c33d`. It is a visual placeholder — no click handler is attached in the default script.
+
+---
+
+### `.btn.maxi`
+
+**Tag:** `span`
+
+The green maximize button. Shares the `.btn` base styles and uses `.maxi` for its `background-color: #69ca66`. Like `.btn.mini`, it is a visual placeholder with no default click behavior.
+
+<Note>
+  `.btn.mini` and `.btn.maxi` are fully styled but have no click handler wired up in the default `script.js`. They are intentional placeholders for minimize and maximize behavior that you can implement yourself by adding `addEventListener('click', ...)` calls targeting those elements.
+</Note>
+
+---
+
+### `#window-content`
+
+**Tag:** `div`
+
+The main content area of the window, rendered below the title bar. Has a fixed `height` of `400px` and uses `display: flex` with `flex-direction: column`, `align-items: center`, and `justify-content: center` to center any child content both horizontally and vertically. Replace or extend the default `<button>` child with your own markup.
+
+## Required IDs
+
+Three element IDs are looked up directly by `getElementById` in `script.js` and must remain in place:
+
+| ID | Used for |
+|---|---|
+| `window-container` | Root element repositioned during drag and hidden on close |
+| `title-bar` | Drag handle — receives the `mousedown` event |
+| `close` | Close button — receives the `click` event |
+
+If you rename any of these IDs you must update the corresponding `getElementById` call in `script.js`, otherwise the relevant behavior will silently stop working.

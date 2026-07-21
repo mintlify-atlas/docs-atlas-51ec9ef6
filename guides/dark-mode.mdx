@@ -1,0 +1,128 @@
+---
+title: "Dark mode support in Window"
+sidebarTitle: "Dark Mode"
+description: "Window includes a built-in dark mode theme via the prefers-color-scheme media query. Learn how it works and how to extend or override it."
+---
+
+Window ships with a complete dark mode theme out of the box. No JavaScript toggling or extra class names are needed — the browser automatically applies the dark styles whenever the user's operating system is set to dark mode, thanks to a standard `prefers-color-scheme` media query in `style.css`.
+
+## How it works
+
+The entire dark theme is contained in a single `@media` block at the bottom of `style.css`:
+
+```css
+@media (prefers-color-scheme: dark) {
+  body {
+    background: linear-gradient(45deg, #34486a, #6b226f);
+  }
+  #title-bar {
+    background-color: rgb(20, 20, 20);
+    border-bottom: 2px solid rgb(54, 54, 54);
+  }
+  #window-container {
+    background-color: rgb(20, 20, 20);
+  }
+  button {
+    background-color: black;
+    color: rgb(100, 100, 100);
+    border: 2px solid rgb(100, 100, 100);
+  }
+}
+```
+
+Each rule overrides its light-mode counterpart only when the media query matches:
+
+- **`body`** — swaps the bright pink-to-blue gradient for a deeper, muted indigo-to-purple gradient.
+- **`#title-bar`** — changes the white background to a near-black `rgb(20, 20, 20)` and darkens the separator border from `rgba(0,0,0,0.1)` to `rgb(54, 54, 54)`.
+- **`#window-container`** — sets the window shell's background to the same `rgb(20, 20, 20)` so the title bar and content area share a consistent surface colour.
+- **`button`** — replaces the light grey button with a fully black background, and applies `rgb(100, 100, 100)` to both the text colour and border, giving a subtle dark-on-dark appearance.
+
+## Colors in dark mode
+
+| Element | Property | Value |
+|---|---|---|
+| Body background | `background` | `linear-gradient(45deg, #34486a, #6b226f)` |
+| Title bar | `background-color` | `rgb(20, 20, 20)` |
+| Title bar separator | `border-bottom` | `2px solid rgb(54, 54, 54)` |
+| Window container | `background-color` | `rgb(20, 20, 20)` |
+| Button background | `background-color` | `black` |
+| Button text | `color` | `rgb(100, 100, 100)` |
+| Button border | `border` | `2px solid rgb(100, 100, 100)` |
+
+<Note>
+  The `.mini` and `.maxi` traffic-light buttons are **not** overridden in the dark mode block. Their colours — `#e8c33d` (yellow) and `#69ca66` (green) — remain exactly the same in both light and dark mode. Only the `.close` button's surrounding container changes; the button colour itself (`#ff3939`) is also unchanged. If you want the traffic lights to shift in dark mode, add explicit overrides for `.close`, `.mini`, and `.maxi` inside the media query.
+</Note>
+
+## Override dark mode
+
+To disable the built-in dark theme entirely, remove the `@media (prefers-color-scheme: dark)` block from `style.css`. The component will then always render with light-mode styles.
+
+To override only specific properties — for example to use a custom dark background colour — add more specific rules after the media query block:
+
+```css
+@media (prefers-color-scheme: dark) {
+  /* existing dark mode rules ... */
+
+  #window-container {
+    background-color: rgb(20, 20, 20); /* [!code --] */
+    background-color: rgb(30, 30, 40); /* [!code ++] */
+  }
+
+  button {
+    background-color: black;           /* [!code --] */
+    background-color: rgb(15, 15, 25); /* [!code ++] */
+  }
+}
+```
+
+Because CSS applies rules in source order, any rule you add later in the same media block will win over earlier declarations for the same property.
+
+## Force dark or light mode
+
+To lock the component to dark mode regardless of the user's OS preference, set `color-scheme: dark` on the `body` element and manually apply the dark styles via a `.dark` class:
+
+```css
+/* Force dark styles unconditionally */
+body.dark {
+  background: linear-gradient(45deg, #34486a, #6b226f);
+  color-scheme: dark;
+}
+
+body.dark #title-bar {
+  background-color: rgb(20, 20, 20);
+  border-bottom: 2px solid rgb(54, 54, 54);
+}
+
+body.dark #window-container {
+  background-color: rgb(20, 20, 20);
+}
+
+body.dark button {
+  background-color: black;
+  color: rgb(100, 100, 100);
+  border: 2px solid rgb(100, 100, 100);
+}
+```
+
+Then toggle the class from JavaScript whenever needed:
+
+```js
+// Force dark mode
+document.body.classList.add('dark');
+
+// Force light mode
+document.body.classList.remove('dark');
+
+// Toggle between the two
+document.body.classList.toggle('dark');
+```
+
+To force light mode and suppress the automatic dark theme, override the media query with `color-scheme: light` on `body`:
+
+```css
+body {
+  color-scheme: light;
+}
+```
+
+This tells the browser to treat the page as a light-mode document even when the OS is in dark mode, preventing the `prefers-color-scheme: dark` block from activating.

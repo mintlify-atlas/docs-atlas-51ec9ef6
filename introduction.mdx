@@ -1,0 +1,54 @@
+---
+title: "Window: a macOS-style floating window for the web"
+sidebarTitle: "Introduction"
+description: "Window is a zero-dependency HTML/CSS/JS component that renders a draggable, closable macOS-style window. No build step required."
+---
+
+Window is a lightweight, zero-dependency component built with vanilla HTML, CSS, and JavaScript. It renders a floating panel styled after the macOS windowing system — complete with a title bar, traffic-light control buttons, drag-to-reposition behaviour, and a close action — all without a framework, bundler, or package manager in sight.
+
+## What it does
+
+Window gives you two core interactive behaviours out of the box.
+
+**Dragging** — The `#title-bar` element listens for `mousedown` events. When the user clicks and holds the title bar, the component tracks the pointer's movement across the page and updates the `left` and `top` CSS properties of `#window-container` in real time, letting the window follow the cursor freely. Releasing the mouse button ends the drag.
+
+**Closing** — The `#close` button (the red traffic-light circle) listens for a `click` event. When triggered, both `#title-bar` and `#window-container` are hidden by setting their `display` style to `none`, dismissing the window from view.
+
+## How it works
+
+The component is split across three files, each with a single responsibility.
+
+| File | Role |
+|---|---|
+| `index.html` | Declares the DOM structure: the outer `#window-container`, the `#title-bar` with its three `.btn` circles, and the `#window-content` area where your content lives. |
+| `style.css` | Positions the window absolutely at the centre of the viewport, applies the rounded corners, drop shadow, and traffic-light colours, and provides a full dark-mode variant via `@media (prefers-color-scheme: dark)`. |
+| `script.js` | Attaches all event listeners after `DOMContentLoaded`: `mousedown` on the title bar to start a drag, `mousemove` on the document to move the window, `mouseup` on the document to end the drag, and `click` on the close button to hide the window. |
+
+## File structure
+
+```
+window/
+├── index.html
+├── style.css
+└── script.js
+```
+
+## Key features
+
+- **Drag to reposition** — Click and hold the title bar to move the window anywhere on the page.
+- **Close button** — The red traffic-light button hides the window with a single click.
+- **Dark mode support** — The stylesheet includes a `prefers-color-scheme: dark` media query that automatically switches the window and background to dark colours.
+- **Zero dependencies** — No frameworks, no build tools, no npm. Drop three files into a folder and open `index.html`.
+- **Absolute positioning** — The window is positioned with `position: absolute`, making it easy to layer above any page content without disrupting document flow.
+- **macOS traffic-light aesthetic** — The three coloured circles (red `#ff3939`, yellow `#e8c33d`, green `#69ca66`) mirror the familiar macOS window chrome.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Have a working draggable window running in your browser in under five minutes.
+  </Card>
+  <Card title="Customization" icon="paintbrush" href="/guides/customization">
+    Learn how to restyle the window, change its dimensions, and swap in your own content.
+  </Card>
+</CardGroup>

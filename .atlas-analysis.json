@@ -1,0 +1,47 @@
+{
+  "projectType": "frontend",
+  "projectName": "Window",
+  "projectDescription": "A vanilla HTML/CSS/JavaScript component that renders a macOS-style draggable and closable window UI element.",
+  "theme": "willow",
+  "primaryColor": "#9adcff",
+  "lightColor": "#e8f7ff",
+  "darkColor": "#34486a",
+  "navigation": {
+    "groups": [
+      {
+        "group": "Get Started",
+        "pages": ["introduction", "quickstart"]
+      },
+      {
+        "group": "Guides",
+        "pages": ["guides/embedding", "guides/customization", "guides/dark-mode"]
+      },
+      {
+        "group": "Reference",
+        "pages": ["reference/html-structure", "reference/css-classes", "reference/javascript-api"]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Draggable window via title bar mousedown/mousemove/mouseup events",
+    "Close button that hides the window (red traffic-light button)",
+    "macOS-style traffic-light window control buttons (close, minimize, maximize)",
+    "Absolute positioning with centered initial placement",
+    "Automatic dark mode support via prefers-color-scheme media query",
+    "Zero dependencies — pure vanilla HTML, CSS, and JavaScript",
+    "Gradient background (light blue-to-pink in light mode, dark in dark mode)"
+  ],
+  "publicApiSurface": [
+    "#window-container — root element of the window",
+    "#title-bar — draggable title bar element",
+    "#window-buttons — container for the three traffic-light buttons",
+    ".btn.close — red close button (#ff3939), hides the window on click",
+    ".btn.mini — yellow minimize button (#e8c33d)",
+    ".btn.maxi — green maximize button (#69ca66)",
+    "#window-content — scrollable content area (400px height)",
+    "titleBar mousedown — starts drag, records offset",
+    "document mousemove — updates window position while dragging",
+    "document mouseup — ends drag",
+    "closeBtn click — sets display:none on title bar and window container"
+  ]
+}

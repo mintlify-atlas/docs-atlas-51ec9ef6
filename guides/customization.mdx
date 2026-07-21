@@ -1,0 +1,155 @@
+---
+title: "Customize Window size, colors, and content"
+sidebarTitle: "Customization"
+description: "Learn how to change the Window component's width, height, border radius, shadow, button colors, and background to match your project's design."
+---
+
+All of Window's visual properties live in `style.css`. Because the component uses no JavaScript for styling, every customization is a plain CSS change — edit the relevant rule, save the file, and the browser reflects it immediately. This guide walks through each customizable area in turn.
+
+## Change the window size
+
+The window's width is set on `#window-container` and its height is set on `#window-content`. The title bar has its own fixed padding and is not part of the content height.
+
+```css
+#window-container {
+  width: 400px; /* [!code --] */
+  width: 560px; /* [!code ++] */
+}
+
+#window-content {
+  height: 400px; /* [!code --] */
+  height: 260px; /* [!code ++] */
+}
+```
+
+Setting a `width` in `px` keeps the window at a fixed size regardless of the viewport. If you want a responsive window, switch to a `%` or `vw` unit — for example `width: 80vw` — and pair it with a `max-width` so it doesn't grow too large on wide screens.
+
+## Change the background gradient
+
+The page background is a CSS gradient applied to `body`. The source ships with a light-mode gradient and a separate dark-mode version (covered in the [Dark Mode](/guides/dark-mode) guide).
+
+```css
+body {
+  background: linear-gradient(45deg, rgb(154, 220, 255), rgb(255, 147, 255)); /* [!code --] */
+  background: linear-gradient(135deg, rgb(255, 200, 150), rgb(150, 200, 255)); /* [!code ++] */
+}
+```
+
+To remove the gradient entirely and use a flat colour:
+
+```css
+body {
+  background: linear-gradient(45deg, rgb(154, 220, 255), rgb(255, 147, 255)); /* [!code --] */
+  background: #f0f0f0; /* [!code ++] */
+}
+```
+
+## Change button colors
+
+The three traffic-light buttons are 15×15 px circles whose colour is controlled entirely by `background-color`. Change any of the three hex values to match your palette.
+
+```css
+.close { background-color: #ff3939; }
+.mini  { background-color: #e8c33d; }
+.maxi  { background-color: #69ca66; }
+```
+
+For example, to use a monochrome set of grey buttons:
+
+```css
+.close { background-color: #ff3939; } /* [!code --] */
+.mini  { background-color: #e8c33d; } /* [!code --] */
+.maxi  { background-color: #69ca66; } /* [!code --] */
+.close { background-color: #888888; } /* [!code ++] */
+.mini  { background-color: #aaaaaa; } /* [!code ++] */
+.maxi  { background-color: #cccccc; } /* [!code ++] */
+```
+
+The `border-radius: 50%`, `width: 15px`, and `height: 15px` rules are what make them circular. Adjust those values if you want pill-shaped or square buttons instead.
+
+## Change the border radius and shadow
+
+The rounded corners and drop shadow are both on `#window-container`:
+
+```css
+#window-container {
+  border-radius: 14px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+```
+
+Increase `border-radius` for a rounder look, decrease it toward `0` for a sharp-cornered style. The `box-shadow` shorthand follows the pattern `offset-x offset-y blur spread color` — raise the blur or opacity value for a more dramatic shadow:
+
+```css
+#window-container {
+  border-radius: 14px;              /* [!code --] */
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15); /* [!code --] */
+  border-radius: 8px;               /* [!code ++] */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.30); /* [!code ++] */
+}
+```
+
+## Add content
+
+Replace the placeholder `<button>Click me</button>` inside `#window-content` with any HTML you like. Here is a practical example using a simple contact card:
+
+```html
+<div id="window-content">
+  <img src="avatar.png" alt="Avatar" style="border-radius: 50%; width: 64px; height: 64px;">
+  <h2>Jane Smith</h2>
+  <p>Product Designer · San Francisco</p>
+  <button>Send message</button>
+</div>
+```
+
+Or a minimal form:
+
+```html
+<div id="window-content">
+  <form>
+    <input type="text"  placeholder="Name"    required>
+    <input type="email" placeholder="Email"   required>
+    <button type="submit">Subscribe</button>
+  </form>
+</div>
+```
+
+`#window-content` uses `display: flex; flex-direction: column; align-items: center; justify-content: center;` out of the box, so children are centred both horizontally and vertically. Override those flex rules if your content needs a different layout.
+
+## Add a window title
+
+The default title bar contains only the three buttons and no visible text. Add a `<span>` inside `#title-bar`, after the buttons div, to display a title centred in the bar:
+
+```html
+<div id="title-bar">
+  <div id="window-buttons">
+    <span class="btn close" id="close"></span>
+    <span class="btn mini"></span>
+    <span class="btn maxi"></span>
+  </div>
+  <span id="window-title">My Window</span> <!-- [!code ++] -->
+</div>
+```
+
+Then add the following CSS to centre the title regardless of the button width:
+
+```css
+#title-bar {
+  position: relative; /* [!code ++] */
+}
+
+#window-title { /* [!code ++] */
+  position: absolute; /* [!code ++] */
+  left: 50%; /* [!code ++] */
+  transform: translateX(-50%); /* [!code ++] */
+  font-size: 13px; /* [!code ++] */
+  font-weight: 600; /* [!code ++] */
+  color: #333; /* [!code ++] */
+} /* [!code ++] */
+```
+
+Using `position: absolute` with `left: 50%` and `translateX(-50%)` keeps the title centred in the bar without being pushed by the button group on the left.
+
+<Tip>
+  Keep `user-select: none` on `#title-bar`. It's already set in the source CSS and prevents the browser from highlighting text in the title label as the user drags the window around. If you remove it or override it, users may see unwanted text selections mid-drag.
+</Tip>

@@ -1,0 +1,152 @@
+---
+title: "Window CSS classes and ID selectors reference"
+sidebarTitle: "CSS Classes"
+description: "Reference for every CSS selector in Window's stylesheet, including IDs, class names, property values, and dark mode overrides via prefers-color-scheme."
+---
+
+This page documents every CSS rule in `style.css`. Each section below corresponds to one selector or rule block, shows the exact source declarations, and explains the role of the key properties in the Window component's layout and behavior.
+
+## `body`
+
+Sets the page canvas. `margin: 0` removes browser default spacing, `height: 100vh` fills the viewport, and `overflow: hidden` prevents scrollbars from appearing when the window is dragged near an edge. The background is a 45-degree linear gradient and a system font stack is applied globally.
+
+```css
+body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(45deg, rgb(154, 220, 255), rgb(255, 147, 255));
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+```
+
+## `#window-container`
+
+The root window panel. `position: absolute` is required for drag repositioning via inline `left`/`top` styles. The initial centering is handled by `top: 50%; left: 50%` combined with `transform: translate(-50%, -50%)`. `overflow: hidden` clips child content to the `14px` rounded corners.
+
+```css
+#window-container {
+    width: 400px;
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    position: absolute;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+```
+
+## `#title-bar`
+
+The draggable header strip. `user-select: none` prevents the browser from selecting text during a drag gesture. `cursor: default` keeps the pointer consistent across the bar. The bottom border provides a visual divider between the title bar and the content area.
+
+```css
+#title-bar {
+    background-color: white;
+    border-bottom: 2px solid rgb(0, 0, 0, 0.1);
+    padding: 15px 16px;
+    display: flex;
+    align-items: center;
+    user-select: none;
+    cursor: default;
+}
+
+#title-bar:active { cursor: default; }
+```
+
+## `#window-buttons`
+
+A flex row containing the three traffic-light buttons. `gap: 8px` spaces them evenly without needing margins on individual buttons.
+
+```css
+#window-buttons {
+    display: flex;
+    gap: 8px;
+}
+```
+
+## `.btn`
+
+Base styles shared by all three control buttons. Each button is rendered as a perfect circle using `border-radius: 50%` on a `15×15px` element. `cursor: default` prevents the pointer from changing to a hand on hover.
+
+```css
+.btn {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    cursor: default;
+}
+```
+
+## `.close` / `.mini` / `.maxi`
+
+Color modifiers for each traffic-light button. `.close` is red (`#ff3939`), `.mini` is yellow (`#e8c33d`), and `.maxi` is green (`#69ca66`).
+
+```css
+.close { background-color: #ff3939; }
+.mini { background-color: #e8c33d; }
+.maxi { background-color: #69ca66; }
+```
+
+## `.btn:active`
+
+Provides a subtle press feedback on all three buttons by darkening them 10% when held down, using the `brightness` filter.
+
+```css
+.close:active, .mini:active, .maxi:active { filter: brightness(0.9); }
+```
+
+## `#window-content`
+
+The main content area below the title bar. Fixed at `height: 400px`. Uses a column flex layout with both axes centered so that any content placed inside is automatically centered in the panel.
+
+```css
+#window-content {
+    height: 400px;
+    color: #333333;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+```
+
+## `button`
+
+Styles the default demo button inside `#window-content`. Uses a light gray background, a subtle border, `10px` border-radius, and a `0.12s ease` transition so that interactive state changes animate smoothly.
+
+```css
+button {
+    padding: 16px 20px;
+    border: 2px solid rgb(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background-color: rgb(230, 230, 230);
+    cursor: pointer;
+    transition: all 0.12s ease;
+}
+```
+
+## `button:active`
+
+Scales the button down to 95% when clicked, giving a physical press effect that is smoothed by the `transition` declared on `button`.
+
+```css
+button:active { transform: scale(0.95); }
+```
+
+## `@media (prefers-color-scheme: dark)`
+
+Overrides key background and border colors when the user's OS is set to dark mode. The page gradient shifts to deep navy/purple tones, the title bar and window container switch to a near-black background (`rgb(20, 20, 20)`), and the demo button becomes black with muted gray text and border.
+
+```css
+@media (prefers-color-scheme: dark) {
+    body { background: linear-gradient(45deg, #34486a, #6b226f); }
+    #title-bar { background-color: rgb(20, 20, 20); border-bottom: 2px solid rgb(54, 54, 54); }
+    #window-container { background-color: rgb(20, 20, 20); }
+    button { background-color: black; color: rgb(100, 100, 100); border: 2px solid rgb(100, 100, 100); }
+}
+```

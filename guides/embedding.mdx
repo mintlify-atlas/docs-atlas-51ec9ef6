@@ -1,0 +1,113 @@
+---
+title: "Embed Window into an existing HTML page"
+sidebarTitle: "Embedding"
+description: "Learn how to add the Window component to any existing HTML page by including the stylesheet and script, then copying the required markup."
+---
+
+Window is a zero-dependency component — there is no build step, no package to install, and no framework required. You can drop it into any existing HTML page by linking two files and copying a short block of markup.
+
+## Add the stylesheet and script
+
+Reference `style.css` in the `<head>` of your page and load `script.js` just before the closing `</body>` tag. Placing the script at the bottom of `<body>` ensures the DOM is fully parsed before the event listeners are registered.
+
+```html
+<head>
+  <!-- your existing head content -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- your existing page content -->
+  <script src="script.js"></script>
+</body>
+```
+
+## Add the window markup
+
+Copy the following `#window-container` structure anywhere inside your `<body>`. The script targets elements by their IDs, so keep all IDs exactly as shown.
+
+```html
+<div id="window-container">
+  <div id="title-bar">
+    <div id="window-buttons">
+      <span class="btn close" id="close"></span>
+      <span class="btn mini"></span>
+      <span class="btn maxi"></span>
+    </div>
+  </div>
+  <div id="window-content">
+    <button>Click me</button>
+  </div>
+</div>
+```
+
+Each part plays a specific role:
+
+- **`#window-container`** — the outermost shell; `position: absolute` lets it float over all other content.
+- **`#title-bar`** — the drag handle; `mousedown` on this element starts the drag interaction.
+- **`#window-buttons`** — houses the three traffic-light circles (close, minimise, maximise).
+- **`#close` (`.btn.close`)** — the red button; clicking it hides the window.
+- **`#window-content`** — your content area; replace or extend what's inside freely.
+
+## Place it on any page
+
+Below is a minimal page that already has its own content, with the Window component injected. The window renders on top of everything else because it uses `position: absolute` and is stacked above the normal document flow.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Page</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+
+    <!-- your existing page content -->
+    <h1>Welcome to my site</h1>
+    <p>This is normal page content sitting behind the floating window.</p>
+
+    <!-- Window component -->
+    <div id="window-container">
+      <div id="title-bar">
+        <div id="window-buttons">
+          <span class="btn close" id="close"></span>
+          <span class="btn mini"></span>
+          <span class="btn maxi"></span>
+        </div>
+      </div>
+      <div id="window-content">
+        <button>Click me</button>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
+```
+
+<Note>
+  The window uses `position: absolute`, which positions it relative to its nearest positioned ancestor. The default `<body>` element has no positioning context (`position: static`), so the window positions itself relative to the initial containing block — the viewport — which is exactly the intended behaviour. Avoid wrapping `#window-container` inside a parent that has `position: relative`, `overflow: hidden`, or a fixed size, as that would clip or reanchor the floating window unexpectedly.
+</Note>
+
+## Showing and hiding programmatically
+
+Clicking the close button sets both `#title-bar` and `#window-container` to `display: none`. To bring the window back — for example when a user clicks a button on your page — reset the `display` property to `block`:
+
+```js
+// Re-show the window after it has been closed
+const win = document.getElementById('window-container');
+const bar = document.getElementById('title-bar');
+
+win.style.display = 'block';
+bar.style.display = '';   // restores the flex layout defined in style.css
+```
+
+You can wire this to any trigger on your page, such as a button click or a timed event:
+
+```js
+document.getElementById('open-window-btn').addEventListener('click', () => {
+  document.getElementById('window-container').style.display = 'block';
+  document.getElementById('title-bar').style.display = '';
+});
+```

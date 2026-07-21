@@ -1,20 +1,40 @@
 ---
-title: "Introduction"
-description: "Welcome to your project"
+title: "Window: macOS-style draggable window in vanilla HTML"
+sidebarTitle: "Home"
+description: "Window is a zero-dependency, vanilla HTML/CSS/JS component that renders a macOS-style floating window with drag and close support."
 ---
 
-Write a short description of your product here. What it does, who it's for, and what they can accomplish with it.
+Window is a lightweight, self-contained UI component that brings a macOS-style floating window to any web page. Drop in three files — no build tools, no frameworks, no dependencies — and get a fully interactive window with drag-to-move and a working close button.
 
-<Tip>
-  Ready to make this your own? Start by editing this page. Update your `docs.json` file to customize your site. Then fill out the [Quickstart](/quickstart) page.
-</Tip>
+<CardGroup cols={2}>
+  <Card title="Introduction" icon="book-open" href="/introduction">
+    Learn what Window is and how it works under the hood.
+  </Card>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Embed a working window in your page in under five minutes.
+  </Card>
+  <Card title="Customization" icon="palette" href="/guides/customization">
+    Change colors, size, and content to fit your project.
+  </Card>
+  <Card title="JavaScript API" icon="code" href="/reference/javascript-api">
+    Explore every event listener and DOM interaction.
+  </Card>
+</CardGroup>
 
-<Card title="Quickstart" icon="rocket" href="/quickstart">
-  This card links to the quickstart page in your project.
-</Card>
-<Card title="Components" icon="puzzle-piece" href="https://mintlify.com/docs/components">
-  Add cards, callouts, steps, tabs, and more to design and structure your pages.
-</Card>
-<Card title="Settings" icon="gear" href="https://mintlify.com/docs/organize/settings">
-  Set your site name, branding, and navigation in the `docs.json` file.
-</Card>
+## What's included
+
+<Steps>
+  <Step title="An HTML skeleton">
+    A `window-container` div with a `title-bar` (holding the three traffic-light buttons) and a `window-content` area ready for your own markup.
+  </Step>
+  <Step title="A CSS stylesheet">
+    Rounded corners, drop shadow, centered absolute positioning, traffic-light button colors, and a full dark-mode theme via `prefers-color-scheme`.
+  </Step>
+  <Step title="A JavaScript behavior file">
+    Drag logic tied to the title bar and a close handler that hides the window when the red button is clicked.
+  </Step>
+</Steps>
+
+<Note>
+  Window is intentionally minimal. It is a starting point — copy the files, adjust the styles, and replace the placeholder button with your own content.
+</Note>

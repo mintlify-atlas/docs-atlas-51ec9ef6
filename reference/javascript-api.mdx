@@ -1,0 +1,113 @@
+---
+title: "Window JavaScript event listeners and behavior reference"
+sidebarTitle: "JavaScript API"
+description: "Complete reference for script.js: the DOMContentLoaded wrapper, drag state variables, title bar mousedown, document mousemove, mouseup, and the close button click handler."
+---
+
+`script.js` attaches all Window interactivity inside a single `DOMContentLoaded` listener, ensuring the DOM is fully parsed before any element lookups or event bindings occur. This page documents every variable, event listener, and the logic inside each handler.
+
+## Initialization
+
+The entire script is wrapped in a `DOMContentLoaded` callback. The first thing it does is resolve the three elements the script needs by ID:
+
+```js
+document.addEventListener('DOMContentLoaded', () => {
+    const windowContainer = document.getElementById('window-container');
+    const titleBar = document.getElementById('title-bar');
+    const closeBtn = document.getElementById('close');
+    // ...
+});
+```
+
+| Variable | Element ID | Purpose |
+|---|---|---|
+| `windowContainer` | `window-container` | Root panel — repositioned during drag, hidden on close |
+| `titleBar` | `title-bar` | Drag handle — source of the `mousedown` event |
+| `closeBtn` | `close` | Red button — source of the `click` event |
+
+## State variables
+
+Three module-scoped variables track drag state. They are declared inside the `DOMContentLoaded` callback and are shared across all event handlers:
+
+```js
+let isDragging = false;
+let offsetX = 0;
+let offsetY = 0;
+```
+
+| Variable | Type | Default | Description |
+|---|---|---|---|
+| `isDragging` | boolean | `false` | `true` while a drag gesture is active (between `mousedown` and `mouseup`) |
+| `offsetX` | number | `0` | Horizontal distance from the mouse pointer to the window's left edge at the moment dragging starts |
+| `offsetY` | number | `0` | Vertical distance from the mouse pointer to the window's top edge at the moment dragging starts |
+
+## Event: titleBar mousedown
+
+Fires when the user presses the mouse button anywhere inside the title bar. Sets `isDragging` to `true` and captures the offset between the current mouse position and the window's current top-left corner. These offsets ensure the window moves relative to where it was grabbed rather than jumping to a fixed position.
+
+```js
+titleBar.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    offsetX = e.clientX - windowContainer.offsetLeft;
+    offsetY = e.clientY - windowContainer.offsetTop;
+});
+```
+
+- `e.clientX` / `e.clientY` — mouse coordinates in the viewport at the moment of the press.
+- `windowContainer.offsetLeft` / `windowContainer.offsetTop` — the window element's current position relative to its offset parent.
+- The difference is stored so that `mousemove` can subtract it back out, keeping the grab point stable throughout the drag.
+
+## Event: document mousemove
+
+Attached to `document` (not the window element) so that dragging continues even if the pointer briefly leaves the panel. The `if (isDragging)` guard means no work is done unless a drag is actually in progress.
+
+```js
+document.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+        windowContainer.style.left = `${e.clientX - offsetX}px`;
+        windowContainer.style.top = `${e.clientY - offsetY}px`;
+    }
+});
+```
+
+- `e.clientX - offsetX` gives the new `left` value: current pointer X minus the recorded grab offset.
+- `e.clientY - offsetY` gives the new `top` value: current pointer Y minus the recorded grab offset.
+- Both are written as inline `px` styles directly on `windowContainer`, which overrides the stylesheet's `transform: translate(-50%, -50%)` centering after the first drag.
+
+<Note>
+  After the first drag interaction, the inline `left` and `top` styles take full control of positioning and the CSS `transform: translate(-50%, -50%)` centring no longer applies. If you need to programmatically re-center the window you must clear those inline styles or reset them to `50%` and restore the transform.
+</Note>
+
+## Event: document mouseup
+
+Attached to `document` so it fires regardless of where the mouse button is released — even outside the browser window. Resets `isDragging` to `false`, which stops `mousemove` from repositioning the panel.
+
+```js
+document.addEventListener('mouseup', () => {
+    isDragging = false;
+});
+```
+
+## Event: closeBtn click
+
+Fires when the user clicks the red `.close` button. Hides both the title bar and the entire window container by setting their `display` to `'none'`.
+
+```js
+closeBtn.addEventListener('click', () => {
+    titleBar.style.display = 'none';
+    windowContainer.style.display = 'none';
+});
+```
+
+Both elements are explicitly hidden: `windowContainer` removes the panel from view, and `titleBar` is hidden separately so that restoring `windowContainer` alone does not inadvertently leave the title bar in an inconsistent state.
+
+## Re-opening the window
+
+There is no built-in re-open handler in `script.js`. To restore the window after it has been closed, set both `display` values back to their visible states:
+
+```js
+windowContainer.style.display = 'block';
+titleBar.style.display = 'flex';
+```
+
+`titleBar` must be restored to `flex` (not `block`) because its layout depends on `display: flex` to align the traffic-light buttons correctly, matching the stylesheet declaration.

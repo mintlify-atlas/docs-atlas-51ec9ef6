@@ -1,47 +1,110 @@
 ---
-title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+title: "Get started with Window in five minutes"
+sidebarTitle: "Quickstart"
+description: "Learn how to embed the Window component in any HTML page in under five minutes with no build tools or dependencies."
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
-
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
-
-## Prerequisites
-
-Before you begin, you must have:
-
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
-
-## Get started
+Window requires no package manager, no bundler, and no framework — just three files and a browser. Follow the steps below and you will have a fully interactive, draggable macOS-style window running locally in minutes.
 
 <Steps>
-  <Step title="Install">
-    Describe how to install your product or sign up.
+  <Step title="Copy the files">
+    The entire component lives in three files. Create a new folder and add each one.
 
-    ```bash
-    npm install your-package
+    - **`index.html`** — the page shell and window DOM structure
+    - **`style.css`** — all visual styling, including dark-mode support
+    - **`script.js`** — drag and close behaviour
+
+    Start with `index.html`. Copy the markup below exactly as shown — it wires up the stylesheet and script, and provides the `#window-container`, `#title-bar`, and `#window-content` elements that the JavaScript targets by ID.
+
+    ```html index.html
+    <!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <title>Window</title>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="stylesheet" href="style.css">
+        </head>
+        <body>
+            <div id="window-container">
+                <div id="title-bar">
+                    <div id="window-buttons">
+                        <span class="btn close" id="close"></span>
+                        <span class="btn mini"></span>
+                        <span class="btn maxi"></span>
+                    </div>
+                </div>
+                <div id="window-content">
+                    <button>Click me</button>
+                </div>
+            </div>
+            <script src="script.js"></script>
+        </body>
+    </html>
     ```
+
+    Then copy `style.css` and `script.js` from the repository into the same folder so that the relative paths in `index.html` resolve correctly.
   </Step>
-  <Step title="Configure">
-    Describe any setup or configuration needed before first use.
+
+  <Step title="Open in your browser">
+    Open `index.html` directly in any modern browser — no local server needed.
 
     ```bash
-    your-cli init
+    open index.html        # macOS
+    start index.html       # Windows
+    xdg-open index.html    # Linux
     ```
+
+    You should see a white, rounded window centred on a soft gradient background. In dark mode the background and window chrome switch to dark colours automatically.
+
+    <Tip>
+      If the styles or script do not load, confirm that `style.css` and `script.js` are in the **same directory** as `index.html`.
+    </Tip>
   </Step>
-  <Step title="Run it">
-    Show the first thing a user does to see it working.
 
-    ```bash
-    your-cli start
-    ```
+  <Step title="Drag the window">
+    Click and hold anywhere on the **title bar** — the strip at the top of the window containing the three coloured circles — then move the mouse. The window follows your cursor in real time. Release the mouse button to drop the window in its new position.
+
+    <Note>
+      Dragging is scoped to the title bar. Clicking inside `#window-content` does not initiate a drag.
+    </Note>
+  </Step>
+
+  <Step title="Close the window">
+    Click the **red circle** on the left side of the title bar. The window and its title bar are immediately hidden. This maps to the `#close` element in the markup and is handled by the click listener in `script.js`.
   </Step>
 </Steps>
 
-<Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
+## Replace the placeholder content
 
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
-</Tip>
+The `#window-content` div ships with a single `<button>Click me</button>` as a placeholder. Replace it with any HTML you like — text, images, forms, or other components.
+
+```html index.html
+<!-- Before -->
+<div id="window-content">
+    <button>Click me</button>
+</div>
+
+<!-- After: custom content example -->
+<div id="window-content">
+    <h2>Hello, Window!</h2>
+    <p>Add any HTML content here.</p>
+    <a href="https://example.com">Learn more</a>
+</div>
+```
+
+The content area is `400px` tall and centres its children both vertically and horizontally using flexbox, so short content will always appear in the middle of the panel without any extra CSS.
+
+## What's next
+
+<CardGroup cols={3}>
+  <Card title="Embedding" icon="code" href="/guides/embedding">
+    Learn how to drop the Window component into an existing page alongside other content.
+  </Card>
+  <Card title="Customization" icon="paintbrush" href="/guides/customization">
+    Change the window's size, colours, border radius, and shadow to match your design.
+  </Card>
+  <Card title="Dark Mode" icon="moon" href="/guides/dark-mode">
+    Understand how the built-in dark-mode media query works and how to extend it.
+  </Card>
+</CardGroup>
